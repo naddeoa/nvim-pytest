@@ -1,5 +1,9 @@
 local sign_lib = require("signs.sign_lib")
 
+--- A table of the most recent results for each test.
+--- @type table<string, table>
+local most_recent_results = {}
+
 local function open_vertical_split()
 	vim.cmd("vnew | wincmd L") -- Open a new vertical split and move it to the right
 	local bufnr = vim.api.nvim_get_current_buf()
@@ -38,6 +42,8 @@ local function run_test(file_path, test_name, line_number)
 				table.insert(results, 1, "Tests Failed.")
 				sign_lib.failed(line_number, vim.api.nvim_get_current_buf())
 				-- write_to_buffer(open_vertical_split(), results)
+				local result_key = file_path .. "::" .. test_name
+				most_recent_results[result_key] = results
 			end
 		end,
 	})
@@ -55,7 +61,30 @@ local function run_tests(file_path, test_names)
 	end
 end
 
+--- Get the most recent results for the given test.
+--- @param file_path string @the path of the file to get the results for
+--- @param test_name string @the name of the test to get the results for
+--- @return table @the results of the test
+local function get_most_recent_results(file_path, test_name)
+	local result_key = file_path .. "::" .. test_name
+	return most_recent_results[result_key]
+end
+
+--- Show the most recent results for the given test.
+--- @param file_path string @the path of the file to show the results for
+--- @param test_name string @the name of the test to show the results for
+--- @return nil
+local function show_most_recent_results(file_path, test_name)
+	local results = get_most_recent_results(file_path, test_name)
+	if not results then
+		return
+	end
+	write_to_buffer(open_vertical_split(), results)
+end
+
 return {
 	run_tests = run_tests,
 	run_test = run_test,
+	get_most_recent_results = get_most_recent_results,
+    show_most_recent_results = show_most_recent_results,
 }

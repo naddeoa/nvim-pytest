@@ -32,15 +32,21 @@ function M.pytest_run_current_function()
 	run_tests.run_test(current_file, function_name, row)
 end
 
--- Function to update the sign column with test results
-function M.update_test_results()
-	-- TODO: Parse PyTest output and update the sign column
+function M.show_last_results()
+	local function_name, row = queries.get_test_at_cursor()
+
+	if not function_name or not row then
+		return
+	end
+
+	run_tests.show_most_recent_results(api.nvim_buf_get_name(0), function_name)
 end
 
 -- Registering the commands
 function M.setup()
 	api.nvim_create_user_command("PyTestRunCurrentFile", M.pytest_run_current_file, {})
 	api.nvim_create_user_command("PyTestRunCurrentFunction", M.pytest_run_current_function, {})
+	api.nvim_create_user_command("PyTestShowLastResultsCurrentFunction", M.show_last_results, {})
 end
 
 return M
