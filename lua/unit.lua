@@ -44,9 +44,9 @@ end
 
 -- Registering the commands
 function M.setup()
-	api.nvim_create_user_command("PyTestRunCurrentFile", M.pytest_run_current_file, {})
-	api.nvim_create_user_command("PyTestRunCurrentFunction", M.pytest_run_current_function, {})
-	api.nvim_create_user_command("PyTestShowLastResultsCurrentFunction", M.show_last_results, {})
+	api.nvim_create_user_command("UnitRunCurrentFile", M.pytest_run_current_file, {})
+	api.nvim_create_user_command("UnitRunCurrentFunction", M.pytest_run_current_function, {})
+	api.nvim_create_user_command("UnitShowLastResultsCurrentFunction", M.show_last_results, {})
 end
 
 return M

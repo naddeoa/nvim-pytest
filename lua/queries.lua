@@ -66,6 +66,12 @@ local function get_test_at_cursor()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local start_row, start_col, end_row, end_col = function_name_node:range()
 	local name = vim.treesitter.get_node_text(function_name_node, bufnr)
+
+    -- Make sure the name contains "test"
+    if not string.find(name, "test") then
+        return nil, nil
+    end
+
 	return name, start_row
 end
 
