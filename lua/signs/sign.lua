@@ -8,17 +8,16 @@ Sign.__index = Sign
 --- @field line integer The line number to start the sign
 --- @field remove function():void The function to remove the sign
 function Sign.new(id, bufnr, line)
-	local self = setmetatable({}, Sign)
-	self.id = id
-	self.bufnr = bufnr
-	self.line = line
-	return self
+    local self = setmetatable({}, Sign)
+    self.id = id
+    self.bufnr = bufnr
+    self.line = line
+    return self
 end
 
 --- Function to remove the sign
 function Sign:remove()
-	vim.fn.sign_unplace("unit", { buffer = self.bufnr, id = self.id })
+    vim.fn.sign_unplace("unit", { buffer = self.bufnr, id = self.id })
 end
 
--- Return the module
 return Sign
