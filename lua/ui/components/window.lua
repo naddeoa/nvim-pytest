@@ -1,5 +1,6 @@
 local fold = require("keys.fold")
 local Section = require("ui.components.section")
+local Filter = require("ui.components.filter")
 
 Window = {}
 Window.__index = Window
@@ -75,6 +76,33 @@ function Window:show_section(section)
     end)
 end
 
+--- @param filter Filter
+function Window:show_filter(filter)
+    if not self.win then
+        self:show()
+    end
+
+    local buf = vim.api.nvim_win_get_buf(self.win)
+
+    modify(buf, function()
+        filter:write(buf)
+    end)
+end
+
+--- @param n integer The number of new lines to add
+function Window:new_line(n)
+    local buf = vim.api.nvim_win_get_buf(self.win)
+
+    local new_lines = {}
+    for _ = 1, n do
+        table.insert(new_lines, "")
+    end
+
+    modify(buf, function()
+        vim.api.nvim_buf_set_lines(buf, -1, -1, false, new_lines)
+    end)
+end
+
 function Window:show_sections(sections)
     local buf = vim.api.nvim_win_get_buf(self.win)
     for _, section in ipairs(sections) do
@@ -84,6 +112,11 @@ function Window:show_sections(sections)
             vim.api.nvim_buf_set_lines(buf, -1, -1, false, { "" })
         end)
     end
+end
+
+--- @param buf number
+function Window.clear(buf)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
 end
 
 return Window

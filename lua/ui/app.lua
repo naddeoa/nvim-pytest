@@ -2,6 +2,7 @@ local sign_lib = require("signs.sign_lib")
 local Window = require("ui.components.window")
 local Section = require("ui.components.section")
 local sign_consts = require("signs.sign_consts")
+local Filter = require("ui.components.filter")
 
 --- @class TestResult
 --- @field results string[]
@@ -137,6 +138,21 @@ function App:show_file_test_results(file_path)
         return
     end
 
+    local filter = Filter.new({
+        All = "1",
+        Failed = "2",
+        Passed = "3",
+    }, function(option)
+        if option == "All" then
+            -- self:show_all_file_test_results(file_path)
+        elseif option == "Failed" then
+            -- self:show_failed_file_test_results(file_path)
+        elseif option == "Passed" then
+            -- self:show_passed_file_test_results(file_path)
+        end
+    end)
+    filter:set_selected_option("All")
+
     --- @type Section[]
     local sections = {}
     for test_name, result in pairs(results) do
@@ -145,6 +161,8 @@ function App:show_file_test_results(file_path)
     end
 
     self.window:show()
+    self.window:show_filter(filter)
+    self.window:new_line(2)
     self.window:show_sections(sections)
 end
 

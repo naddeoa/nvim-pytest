@@ -21,7 +21,7 @@ end
 --- @param folded boolean
 function Section:write(bufnr, folded)
     local bufnr_lines = vim.api.nvim_buf_line_count(bufnr)
-    local title_start = bufnr_lines
+    local title_start = bufnr_lines - 1
     local content_start = title_start + 1
     local content_end = content_start + #self.content
 
